@@ -75,7 +75,8 @@ void displayList(struct Node* head){
 struct Node* getParameters()
 {
     head = NULL; //list is empty at the start
-    
+    int temperature = getTemperature();
+    add(&head,temperature);
     evaluateMousePointer();
     int mousex=getMouseX();
     int mousey=getMouseY();
@@ -87,8 +88,7 @@ struct Node* getParameters()
     add(&head,processCount);
     add(&head,timeInMillis);
 
-    int temperature = getTemperature();
-    add(&head,temperature);
+    
 
     //displayList(head);
     return head;
