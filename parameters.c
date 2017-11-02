@@ -10,21 +10,13 @@
 #include <time.h>
 
 static int mousex,mousey;
-/*
-* A fuction to call the program's supplied error handler if any sort of
-  system call error occurs.
-* Requied parameters - pointers to Display and XErrorEvent
-*/
-static int _XlibErrorHandler(Display *display, XErrorEvent *event) 
-{
-    fprintf(stderr, "An error occured detecting the mouse position\n");
-    return True;
-}
+
 
 /*
 * A function that returns the value of mouse X
 */
 int getMouseX(){
+    printf("mouse X - %d\n",mousex);
     return mousex;
 }
 
@@ -32,6 +24,7 @@ int getMouseX(){
 * A function that returns the value of mouse Y
 */
 int getMouseY(){
+    printf("mouse Y - %d\n",mousey);
     return mousey;
 }
 
@@ -56,10 +49,6 @@ void evaluateMousePointer()
 //  function to display error message if any and terminating program execution.
     assert(display);
 
-    /* A fuction to call the program's supplied error handler if any sort of
-       system call error occurs.
-    */
-    XSetErrorHandler(_XlibErrorHandler);
 
     //Fuction to return the number of available screens.
     number_of_screens = XScreenCount(display);
@@ -117,7 +106,8 @@ int getProcessCount()
     	file_count++;
 	    
 	}
-	closedir(dirp);
+    closedir(dirp);
+    printf("process count - %d\n",file_count);
 	return file_count;
 }
 
@@ -127,7 +117,8 @@ int getProcessCount()
 int getTime()   
 {   
     clock_t t1;  
-    t1 = clock();   
+    t1 = clock();
+    printf("time stamp (%10000) - %d\n",t1);   
     return t1;   
 }
 
@@ -158,6 +149,7 @@ int getTempFromQuery(FILE *fp){
             break;
     }
     int temperature=(path[i+3]-48)*10+(path[i+4]-48);
+    printf("temperature - %d\n",temperature);
     return temperature;
 }
 
@@ -179,6 +171,7 @@ int getTemperature()
         exit(1);
     }
     int temperature=getTempFromQuery(fp);
+    
     //printf("temp - %d\n",temperature);
     // close connection
     pclose(fp);
