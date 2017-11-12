@@ -24,7 +24,7 @@ void getPasswordChar(char * set){
         //printf("%c",set[0]);
     }
     else{
-        int charASCII=set[0]+(getElementAt(head,rand()%5)%(set[2]-set[0]));
+        int charASCII=set[0]+(getElementAt(head,(clock()+idx)%5)%(set[2]-set[0]));
         password[idx++]=charASCII;
         //printf("%c",charASCII);
     }
@@ -59,7 +59,7 @@ void getPasswordFromGroup(char * group,int size,int occurence){
         i++;
     }
     //printf("setidx - %d\n",setidx);
-    getPasswordChar(sets[rand()%setidx]);
+    getPasswordChar(sets[clock()%setidx]);
     getPasswordFromGroup(group,size,occurence-1);
 }
 
@@ -102,7 +102,7 @@ void createPassword(char * regex){
 }
 
 void inputOptions(){
-    printf("Passowrd Generator - \n");
+    printf("Password Generator - \n");
     printf("Select one of the following password template - \n\n");
     printf("\t1 - Complex Password\n");
     printf("\t2 - PIN Password\n");
@@ -114,13 +114,16 @@ void inputOptions(){
 int main(){
     char *regex;
     int i=1;
+    FILE *fp;
+    fp = fopen("pass.txt", "a+");
+
     do{
         idx=0;
         inputOptions();
         scanf("%d",&i);
         //complex password
         if(i==1){
-            regex="([a-z]|[A-Z])([A-Z]|[a-z]|[0-9]){6}(!|@|#|$|%|^|&|_)([0-9])";
+            regex="([a-z])([A-Z])([A-Z]|[a-z]|[0-9]){5}(!|@|#|$|%|^|&|_)([0-9])";
         }
         //pin password
         else if(i==2){
@@ -137,27 +140,45 @@ int main(){
         //customized passoword
         else{
             printf("Enter the regex:- \n");
-            scanf("%s",regex);
+            regex = malloc(200);
+            scanf("%200s",regex);
         }
 
         i=isValidRegex(regex);
-        head = getParameters();
+        
 
-        if(i==1)
+        if(i==1){
+            head = getParameters();
             createPassword(regex);
+        }
+            
         else{
             printf("Invalid Regex please enter again\n");
             continue;
         }
+        
         password[idx]='\0';
         printf("\n\nPassword - %s\n\n",password);
-
-        printf("Enter 1 to calculate password again - ");
+        fputs(password,fp);
+        fputs("\n",fp);
+        printf("Enter 1 to calculate password again - \n");
+        printf("      2 to get previous password - ");
         scanf("%d",&i);
-
+        if(i==2){
+            fclose(fp);
+            fp = fopen("pass.txt", "a+");
+            printf("Enter password index - ");
+            scanf("%d",i);
+            int itr=0;
+            char pass[10];
+            while(fgets (pass, sizeof(pass), fp)!=NULL ){
+                printf("%s",pass);
+            }
+            
+        }
     }while(i==1);
 
-    
+    fclose(fp);
     return 0;
 
 }

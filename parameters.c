@@ -10,7 +10,16 @@
 #include <time.h>
 
 static int mousex,mousey;
-
+/*
+* A fuction to call the program's supplied error handler if any sort of
+  system call error occurs.
+* Requied parameters - pointers to Display and XErrorEvent
+*/
+static int _XlibErrorHandler(Display *display, XErrorEvent *event) 
+{
+    fprintf(stderr, "An error occured detecting the mouse position\n");
+    return True;
+}
 
 /*
 * A function that returns the value of mouse X
@@ -49,6 +58,10 @@ void evaluateMousePointer()
 //  function to display error message if any and terminating program execution.
     assert(display);
 
+    /* A fuction to call the program's supplied error handler if any sort of
+       system call error occurs.
+    */
+    XSetErrorHandler(_XlibErrorHandler);
 
     //Fuction to return the number of available screens.
     number_of_screens = XScreenCount(display);
@@ -175,6 +188,6 @@ int getTemperature()
     //printf("temp - %d\n",temperature);
     // close connection
     pclose(fp);
-
+    if(temperature<0) temperature=0;
     return temperature;
 }
