@@ -115,70 +115,78 @@ int main(){
     char *regex;
     int i=1;
     FILE *fp;
-    fp = fopen("pass.txt", "a+");
 
     do{
-        idx=0;
-        inputOptions();
-        scanf("%d",&i);
-        //complex password
-        if(i==1){
-            regex="([a-z])([A-Z])([A-Z]|[a-z]|[0-9]){5}(!|@|#|$|%|^|&|_)([0-9])";
-        }
-        //pin password
-        else if(i==2){
-            regex="([0-9]){4}";
-        }
-        //number password
-        else if(i==3){
-            regex="([0-9]){8}";
-        }
-        //simple password
-        else if(i==4){
-            regex="([a-z]|[A-Z])([A-Z]|[a-z]){7}";
-        }
-        //customized passoword
-        else{
-            printf("Enter the regex:- \n");
-            regex = malloc(200);
-            scanf("%200s",regex);
-        }
-
-        i=isValidRegex(regex);
-        
 
         if(i==1){
-            head = getParameters();
-            createPassword(regex);
-        }
-            
-        else{
-            printf("Invalid Regex please enter again\n");
-            continue;
-        }
-        
-        password[idx]='\0';
-        printf("\n\nPassword - %s\n\n",password);
-        fputs(password,fp);
-        fputs("\n",fp);
-        printf("Enter 1 to calculate password again - \n");
-        printf("      2 to get previous password - ");
-        scanf("%d",&i);
-        if(i==2){
-            fclose(fp);
             fp = fopen("pass.txt", "a+");
-            printf("Enter password index - ");
-            scanf("%d",i);
-            int itr=0;
-            char pass[10];
-            while(fgets (pass, sizeof(pass), fp)!=NULL ){
-                printf("%s",pass);
+            idx=0;
+            inputOptions();
+            scanf("%d",&i);
+            //complex password
+            if(i==1){
+                regex="([a-z])([A-Z])([A-Z]|[a-z]|[0-9]){5}(!|@|#|$|%|^|&|_)([0-9])";
+            }
+            //pin password
+            else if(i==2){
+                regex="([0-9]){4}";
+            }
+            //number password
+            else if(i==3){
+                regex="([0-9]){8}";
+            }
+            //simple password
+            else if(i==4){
+                regex="([a-z]|[A-Z])([A-Z]|[a-z]){7}";
+            }
+            //customized passoword
+            else{
+                printf("Enter the regex:- \n");
+                regex = malloc(200);
+                scanf("%200s",regex);
+            }
+    
+            i=isValidRegex(regex);
+            
+    
+            if(i==1){
+                head = getParameters();
+                createPassword(regex);
+            }
+                
+            else{
+                printf("Invalid Regex please enter again\n");
+                continue;
             }
             
+            password[idx]='\0';
+            printf("\n\nPassword - %s\n\n",password);
+            fputs(password,fp);
+            fputs("\n",fp);
+            fclose(fp);
+            printf("Enter 1 to calculate password again - \n");
+            printf("      2 to get previous password - ");
+            scanf("%d",&i);
         }
-    }while(i==1);
+        else if(i==2){
+            fp = fopen("pass.txt", "r");
+            printf("Enter password index - ");
+            scanf("%d",&i);
+            int itr=0;
+            char *pass;
+            size_t len = 0;
+            while(itr++<i && getline(&pass,&len, fp)!=-1 ){
+                
+            }
+            printf("password - %s\n",pass);
+            fclose(fp);
+            printf("Enter 1 to calculate password again - \n");
+            printf("      2 to get previous password - ");
+            scanf("%d",&i);
+        }
+    }while(i==1 || i==2);
 
-    fclose(fp);
+    
     return 0;
 
 }
